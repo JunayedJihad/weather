@@ -23,7 +23,7 @@
 
     <div class="weather-card">
       <div class="weather-img">
-        <img src="./search.png" alt="">
+        <img src="./search.png" alt="" id="weatherIcon">
       </div>
       <div class="loc_temp">
         <span id="temp">__°C</span>
@@ -31,18 +31,18 @@
         <h3 id="location">__,__ </h3>
       </div>
       <div class="position mt-3">
-        <span>Latitude: __°</span>
-        <span>Longitude: __°</span>
+        <span id="lat">Latitude: __°</span>
+        <span id="lon">Longitude: __°</span>
       </div>
       <form id="form" class="form">
         <input type="text" class="form-control my-4" id="input" placeholder="Enter City" />
       </form>
       <div class="date_time">
-        <p class="text-center ">___ __ __ ____</p>
+        <p class="text-center today ">___ __ __ ____</p>
       </div>
       <div class="hum_sunrise">
-        <span>Humidity: __%</span>
-        <span>Pressure: __atm</span>
+        <span id="humidity">Humidity: __%</span>
+        <span id="pressure">Pressure: __atm</span>
       </div>
 
     </div>

@@ -1,20 +1,8 @@
-let days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
 let form = document.getElementById("form");
 let today = new Date();
 let presentDate = today.toDateString();
 
-
-
-form.onsubmit=function  (e) {
+form.onsubmit = async function (e) {
   e.preventDefault();
   let city = document.getElementById("input").value.toLowerCase();
   city = city.split(" ");
@@ -24,46 +12,40 @@ form.onsubmit=function  (e) {
 
   const link = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=66aadee92cc5489c88cc00ac29627ef8`;
 
-  let update = async () => {
+  try {
     let response = await fetch(link);
     let data = await response.json();
+    if (data.cod >= 400) {
+      throw new Error(data.message);
+    }
 
     console.log(data);
 
     let weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
     let lat = data.coord.lat;
     let lon = data.coord.lon;
+    document.getElementById("weatherIcon").src = `${weatherIcon}`;
+    document.getElementById("temp").innerHTML = `${data.main.temp.toFixed(
+      1
+    )}°C`;
+    document.getElementById("weather").innerHTML = `${data.weather[0].main}`;
+    document.getElementById(
+      "location"
+    ).innerHTML = `${data.name},${data.sys.country}`;
+    document.getElementById("lat").innerHTML = `Latitude: ${lat.toFixed(2)}°`;
+    document.getElementById("lon").innerHTML = `Longitude: ${lon.toFixed(2)}°`;
+    document.getElementsByClassName("today").innerHTML = `${presentDate}`;
+    document.getElementById(
+      "humidity"
+    ).innerHTML = `Humidity: ${data.main.humidity}%`;
+    document.getElementById("pressure").innerHTML = `Pressure: ${(
+      (data.main.pressure * 100) /
+      101325
+    ).toFixed(2)} atm`;
 
-    document.getElementById("body").innerHTML = `<div class="weather-card">
-      <div class="weather-img">
-        <img src="${weatherIcon}" alt="">
-      </div>
-      <div class="loc_temp">
-        <span id="temp">${data.main.temp.toFixed(1)}°C</span>
-        <h5 id="weather">${data.weather[0].main}</h5>
-        <h3 id="location">${data.name},${data.sys.country}</h3>
-      </div>
-      <div class="position mt-3">
-        <span>Latitude: ${lat.toFixed(2)}°</span>
-        <span>Longitude: ${lon.toFixed(2)}°</span>
-      </div>
-      <form id="form" class="form" onsubmit="updateWeather()">
-        <input type="text" class="form-control my-4" id="input" placeholder="Enter City" />
-      </form>
-      <div class="date_time">
-        <p class="text-center ">${presentDate}</p>
-      </div>
-      <div class="hum_sunrise">
-        <span>Humidity: ${data.main.humidity}%</span>
-        <span>Pressure: ${((data.main.pressure * 100) / 101325).toFixed(
-          2
-        )} atm </span>
-      </div>
-
-    </div>`;
     document.getElementById("input").value = "";
-  };
-
-  update();
-
+  } catch (error) {
+    document.getElementById("input").value = "";
+    alert(error)
+  }
 };
